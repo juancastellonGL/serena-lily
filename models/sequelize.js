@@ -1,8 +1,6 @@
 const Sequelize = require("sequelize");
 const { database } = require("config");
 
-/*REFACTOR: esto si debería estar en la carpeta models??*/
-
 let sequelize = null;
 module.exports = {
   connections: (() => {
