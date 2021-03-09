@@ -1,12 +1,19 @@
 const { connections, Sequelize } = require("./sequelize");
 
+/**
+ * Represents a purchase.
+ * @constructor
+ * @param {string} id
+ * @param {string} date
+ * @param {int} quantity
+ */
 let purchaseSchema = connections.define("purchases", {
     id: Sequelize.STRING,
-    created: {
-        type: Sequelize.DATEONLY,
-        defaultValue: Sequelize.NOW
+    receiving: {
+        type: Sequelize.DATEONLY
     },
+    itemId: Sequelize.INTEGER,
     quantity: Sequelize.INTEGER
 });
 
-module.exports = { User: purchaseSchema }
+module.exports = { Purchase: purchaseSchema }
