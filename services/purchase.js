@@ -43,7 +43,7 @@ let purchaseService = {
                         for (const purchase of purchases) {
                             let itemId = purchase.itemId;
                             let quantity = purchase.quantity;
-                            updates.push(Item.createOrUpdate({id: itemId, quantity: quantity}));
+                            updates.push(Item.createOrUpdate({id: itemId, quantity: quantity}, true));
                         }
                         Promise.all(updates).then(()=> {
                             done();

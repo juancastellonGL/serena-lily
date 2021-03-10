@@ -12,8 +12,8 @@ let generalService = {
                 try {
                     let query = { where: { id: id  } };
                     query.attributes = ["id"];
-                    model.findOne(query).then(sale => {
-                        if (sale) {
+                    model.findOne(query).then(model => {
+                        if (model) {
                             done(true);
                         }
                         done(false);
