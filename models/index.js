@@ -1,4 +1,5 @@
 const { connections } = require("./sequelize");
+
 /** @module models */
 module.exports = {
     Model: {

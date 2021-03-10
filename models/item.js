@@ -10,4 +10,5 @@ let itemSchema = connections.define("items", {
     id: Sequelize.INTEGER,
     available: Sequelize.INTEGER
 });
+/** @module item/model */
 module.exports = { Item: itemSchema }

@@ -15,5 +15,5 @@ let saleSchema = connections.define("sales", {
     itemId: Sequelize.INTEGER,
     quantity: Sequelize.INTEGER
 });
-
+/** @module sale/model */
 module.exports = { Sale: saleSchema }
