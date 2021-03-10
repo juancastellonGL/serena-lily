@@ -91,14 +91,21 @@ let saleService = {
                 return reject("there was an errror while updating the item list: ", err);
             });
         });
-    }
+    },
 
     /**
      *return an Array of sales
      * @param {JSON} a json with the sale values
      * @returns
      */
-
+    allocate: () => {
+        return new Promise((done, reject) => {
+            query.attributes = ["id", "created"];
+            Model.Sale.findAll(query).then(sales => {
+                done(sales);
+            });
+        });
+    }
 }
 
 /** @module sale/service */
