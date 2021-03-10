@@ -19,13 +19,13 @@ let itemService = {
                         }).catch(err => {
                             return reject("there was an error updating the item", err);
                         });
-                    } else if(isAPurchase === true){
+                    } else if (isAPurchase === true) {
                         Model.Item.create(itemData).then(item => {
                             done(item);
                         }).catch(err => {
                             return reject("there was an error creating the item", err);
                         });
-                    }else{
+                    } else {
                         return reject("the item does not exists");
                     }
                 } catch (error) {
@@ -43,12 +43,12 @@ let itemService = {
         if (id) {
             return new Promise((done, reject) => {
                 try {
-                    let query = { where: { id: id  } };
+                    let query = { where: { id: id } };
                     query.attributes = ["id", "available"];
                     model.findOne(query).then(item => {
                         if (item) {
                             done(item.available);
-                        }else{
+                        } else {
                             return reject("the item does not exists");
                         }
                     });
@@ -57,6 +57,28 @@ let itemService = {
                 }
             });
         }
+    },
+    /**
+     *brings a list of items
+     * @param {array} array of items id
+     * @returns {array} array of items 
+     */
+    itemList: (itemsIds) => {
+        return new Promise((done, reject) => {
+            let query = {
+                where: {
+                    id: {
+                        [Op.or]: [itemsIds]
+                    }
+                }
+            };
+            query.attributes = ["id", "available"];
+            Model.Item.findAll(query).then(items => {
+                done(items);
+            }).catch(err => {
+                return reject("there was an error searching for the items: ", err)
+            })
+        });
     }
 }
 

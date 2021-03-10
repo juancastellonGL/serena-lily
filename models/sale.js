@@ -13,7 +13,8 @@ let saleSchema = connections.define("sales", {
         defaultValue: Sequelize.NOW
     },
     itemId: Sequelize.INTEGER,
-    quantity: Sequelize.INTEGER
+    quantity: Sequelize.INTEGER,
+    dispatched: Sequelize.BOOLEAN
 });
 /** @module sale/model */
 module.exports = { Sale: saleSchema }

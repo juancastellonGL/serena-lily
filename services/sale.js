@@ -1,7 +1,7 @@
 const { Model } = require("../models");
 const Item = require("./item")
 const General = require("./general");
-const { availability } = require("./item");
+const { availability, itemList } = require("./item");
 
 let saleService = {
     /**
@@ -12,32 +12,92 @@ let saleService = {
     create: saleData => {
         return new Promise((done, reject) => {
             Item.availability(saleData.itemId).then(availability => {
-                if(availability >= saleData.quantity){
-                    General.alreadyExists(saleData.id, Model.Sale).then(exists => {
-                        try {
-                            if (exists === false) {
-                                Model.Sale.create(saleData).then(sale => {
+                General.alreadyExists(saleData.id, Model.Sale).then(exists => {
+                    try {
+                        if (exists === false) {
+                            if (availability <= saleData.quantity) {
+                                saleData.dispatched = false;
+                            }
+                            Model.Sale.create(saleData).then(sale => {
+                                if (saleData.dispatched === true) {
                                     sale.quantity = -sale.quantity;
-                                    Item.createOrUpdate(sale).then(()=>{
+                                    Item.createOrUpdate(sale).then(() => {
                                         done();
                                     }).catch(err => {
-                                        return reject("there was an error while updating the stock quantity: ",err);
+                                        return reject("there was an error while updating the stock quantity: ", err);
                                     });
-                                    
-                                });
-                            } else {
-                                return reject("the sale already exists");
-                            }
-                        } catch (error) {
-                            return reject("there was an error creating the sale: ", error);
+                                }
+                            });
+                        } else {
+                            return reject("the sale already exists");
                         }
-                    });
-                }else{
-                    return reject("there isn't enough items to sell");
-                }
+                    } catch (error) {
+                        return reject("there was an error creating the sale: ", error);
+                    }
+                });
             });
         });
     },
+    /**
+     *updates pending sales dispatch status
+     * @param {STRING} sale id
+     * @returns
+     */
+    updateStatus: (id) => {
+        return new Promise((done, reject) => {
+            Model.Sale.update({ dispatched: true }, { where: { id: id } })
+                .then(() => { done() })
+                .catch(err => {
+                    return reject("there was an error updating the status: ", err);
+                });
+        });
+    },
+    /**
+     *dispatches pending sales
+     * @param 
+     * @returns
+     */
+    dispatch: () => {
+        return new Promise((done, reject) => {
+            let salesUpdates = [];
+            let itemUpdates = [];
+            let query = { where: { dispatched: false } };
+            query.attributes = ["id", "quantity", "itemId", "dispatched"];
+            Model.Sale.findAll(query).then(sales => {
+                let itemsId = sales.map(sale => sale.itemId);
+                Item.itemList(itemsId).then(items => {
+                    for (const sale of sales) {
+                        let itemId = sale.itemId;
+                        items.forEach(item => {
+                            if (itemId === item.id) {
+                                if (sale.quantity >= item.available) {
+                                    sale.dispatched = true;
+                                    return item.available -= sale.quantity;
+                                }
+                            }
+                        });
+                    }
+                    itemUpdates = items.map(item => { return Item.createOrUpdate(item) });
+                    salesUpdates.push(this.updateStatus(sale.id));
+                });
+            });
+            Promise.all(itemUpdates).then(() => {
+                Promise.all(salesUpdates).then(() => {
+                    done();
+                }).catch(err => {
+                    return reject("there was an error while updating the sales: ", err);
+                })
+            }).catch(err => {
+                return reject("there was an errror while updating the item list: ", err);
+            });
+        });
+    }
+
+    /**
+     *return an Array of sales
+     * @param {JSON} a json with the sale values
+     * @returns
+     */
 
 }
 
