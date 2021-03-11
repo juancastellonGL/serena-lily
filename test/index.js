@@ -1,6 +1,5 @@
 const chai = require("chai");
 const should = chai.should();
-const expect = chai.expect;
 const { Services } = require("../services");
 const { Model } = require("../models");
 
@@ -101,5 +100,17 @@ describe("Sale services", function () {
             });
         });
     });
+});
 
+after("cleaning db", function (done) {
+    Model.Purchase.findOne({ where: { id: "p1" } }).then(function (purchase) {
+        purchase.destroy();
+        Model.Item.findOne({ where: { id: "1" } }).then(function (item) {
+            item.destroy();
+            Model.Sale.findOne({ where: { id: "s1" } }).then(function (sale) {
+                sale.destroy();
+                done();
+            })
+        })
+    })
 });
