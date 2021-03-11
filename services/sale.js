@@ -15,13 +15,12 @@ let saleService = {
                 General.alreadyExists(saleData.id, Model.Sale).then(exists => {
                     try {
                         if (exists === false) {
-                            if (availability <= saleData.quantity) {
+                            if (availability < saleData.quantity) {
                                 saleData.dispatched = false;
                             }
                             Model.Sale.create(saleData).then(sale => {
-                                if (saleData.dispatched === true) {
-                                    sale.quantity = -sale.quantity;
-                                    Item.createOrUpdate(sale).then(() => {
+                                if (sale.dispatched === true) {
+                                    Item.createOrUpdate({id: sale.itemId, available: -sale.quantity}).then(() => {
                                         done();
                                     }).catch(err => {
                                         return reject("there was an error while updating the stock quantity: ", err);
@@ -72,13 +71,13 @@ let saleService = {
                             if (itemId === item.id) {
                                 if (sale.quantity >= item.available) {
                                     sale.dispatched = true;
-                                    return item.available -= sale.quantity;
+                                    console.log(sale);
+                                    itemUpdates.push(Item.createOrUpdate({id: item.id, available: -sale.quantity}));
                                 }
                             }
                         });
+                        salesUpdates.push(saleService.updateStatus(sale.id));
                     }
-                    itemUpdates = items.map(item => { return Item.createOrUpdate(item) });
-                    salesUpdates.push(this.updateStatus(sale.id));
                 });
             });
             Promise.all(itemUpdates).then(() => {
@@ -100,6 +99,7 @@ let saleService = {
      */
     allocate: () => {
         return new Promise((done, reject) => {
+            let query = {};
             query.attributes = ["id", "created"];
             Model.Sale.findAll(query).then(sales => {
                 done(sales);

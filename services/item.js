@@ -1,6 +1,7 @@
 const { Model, connections } = require("../models");
 const sequelize = connections.Sequelize;
 const General = require("./general");
+const Op = sequelize.Op;
 
 let itemService = {
     /**
@@ -13,14 +14,14 @@ let itemService = {
             General.alreadyExists(itemData.id, Model.Item).then(exists => {
                 try {
                     if (exists === true) {
-                        let query = `UPDATE items SET available = available + ${itemData.quantity}  WHERE id = ${itemData.id}`;
+                        let query = `UPDATE items SET available = available + ${itemData.available}  WHERE id = ${itemData.id}`;
                         connections.query(query, { type: sequelize.QueryTypes.UPDATE }).then(() => {
                             done();
                         }).catch(err => {
                             return reject("there was an error updating the item", err);
                         });
                     } else if (isAPurchase === true) {
-                        Model.Item.create(itemData).then(item => {
+                        Model.Item.create({id: itemData.id, available: itemData.available}).then(item => {
                             done(item);
                         }).catch(err => {
                             return reject("there was an error creating the item", err);
@@ -45,7 +46,7 @@ let itemService = {
                 try {
                     let query = { where: { id: id } };
                     query.attributes = ["id", "available"];
-                    model.findOne(query).then(item => {
+                    Model.Item.findOne(query).then(item => {
                         if (item) {
                             done(item.available);
                         } else {

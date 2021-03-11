@@ -7,8 +7,13 @@ const { connections, Sequelize } = require("./sequelize");
  * @param {int} available
  */
 let itemSchema = connections.define("items", {
-    id: Sequelize.INTEGER,
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true
+    },
     available: Sequelize.INTEGER
+}, {
+    timestamps: false
 });
 /** @module item/model */
 module.exports = { Item: itemSchema }
