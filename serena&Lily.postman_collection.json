@@ -1,0 +1,183 @@
+{
+	"info": {
+		"_postman_id": "1f39c7f8-1e97-4c85-9f32-b41ea07951b4",
+		"name": "serena&Lily",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "new purchase",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "p1",
+							"type": "text"
+						},
+						{
+							"key": "receiving",
+							"value": "2021-03-11",
+							"type": "text"
+						},
+						{
+							"key": "itemId",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "quantity",
+							"value": "100",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/purchase/new",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"purchase",
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "purchased arrivals",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "p2",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "currentDate",
+							"value": "2021-03-11",
+							"type": "text"
+						},
+						{
+							"key": "itemId",
+							"value": "1",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "quantity",
+							"value": "100",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/purchase/arrivals",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"purchase",
+						"arrivals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "new sale",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "s2",
+							"type": "text"
+						},
+						{
+							"key": "receiving",
+							"value": "2021-03-11",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "itemId",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "quantity",
+							"value": "100",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/sale/new",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"sale",
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "dispatched available sales",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/sale/dispatch",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"sale",
+						"dispatch"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "allocate sales",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/sale/allocate",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"sale",
+						"allocate"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
