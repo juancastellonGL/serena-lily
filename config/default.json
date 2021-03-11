@@ -3,5 +3,6 @@
     "host": "serena-lily.cdaf2wvkigwj.us-east-1.rds.amazonaws.com",
     "port": "3306",
     "user": "admin",
+    "password": "b1V2gP0MmqhN",
     "database": "serena_lily"
 }}

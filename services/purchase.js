@@ -15,7 +15,7 @@ let purchaseService = {
                 try {
                     if (exists === false) {
                         Model.Purchase.create(purchaseData).then(purchase => {
-                            done();
+                            done(purchase);
                         });
                     } else {
                         return reject("the purchase already exists");
@@ -24,8 +24,8 @@ let purchaseService = {
                     return reject("there was an error creating the purchase: ", error);
                 }
 
-            })
-        })
+            });
+        });
     },
     /**
      *updates the quantity of the available items where a purchase is due to arrive
@@ -50,8 +50,9 @@ let purchaseService = {
                         }).catch(err=> {
                             return reject("there was an error with the arrival of an item: ", err);
                         });
+                    }else{
+                        done();
                     }
-                    done();
                 });
             } catch (error) {
                 return reject(error);

@@ -21,10 +21,12 @@ let saleService = {
                             Model.Sale.create(saleData).then(sale => {
                                 if (sale.dispatched === true) {
                                     Item.createOrUpdate({id: sale.itemId, available: -sale.quantity}).then(() => {
-                                        done();
+                                        done(sale);
                                     }).catch(err => {
                                         return reject("there was an error while updating the stock quantity: ", err);
                                     });
+                                }else{
+                                    done(sale);
                                 }
                             });
                         } else {
@@ -71,7 +73,6 @@ let saleService = {
                             if (itemId === item.id) {
                                 if (sale.quantity >= item.available) {
                                     sale.dispatched = true;
-                                    console.log(sale);
                                     itemUpdates.push(Item.createOrUpdate({id: item.id, available: -sale.quantity}));
                                 }
                             }
